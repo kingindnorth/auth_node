@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs")
+const passport = require("passport")
 
 const User = require("../models/User")
 
@@ -14,20 +15,12 @@ const getRegister = async(req,res)=>{
     res.render("register")
 }
 
-const postLogin = async(req,res)=>{
-    const errors = []
-    try{
-        const user = await User.findOne({email})
-        if(!user){
-            errors.push({msg:"email does not exists, please register!"})
-            return res.status(404).render("login")
-        }
-        res.status(200).json("ok")
-    }catch(err){
-        console.log(err);
-        res.status(500).json("internal server error")
-    }
-
+const postLogin = (req,res,next)=>{
+    passport.authenticate('local', {
+        successRedirect: '/dashboard',
+        failureRedirect: '/login',
+        failureFlash: true
+      })(req, res, next);
 }
 
 const postRegister = async(req,res)=>{
@@ -72,9 +65,8 @@ const postRegister = async(req,res)=>{
             password:hashPassword
         })
         await newUser.save()
-        console.log(success_msg);
         req.flash('success_msg','you are now registered')
-        res.status(200).render('login')
+        res.redirect('/login')
     }catch(err){
         res.status(500).json("internal server error")
     }
@@ -84,11 +76,18 @@ const getDashboard = async(req,res)=>{
     res.render("dashboard")
 }
 
+const logout = (req,res)=>{
+    // req.logout()
+    req.flash('success_msg', 'You are logged out');
+    res.redirect('/login');
+}
+
 module.exports = {
     getLogin,
     getRegister,
     getDashboard,
     postLogin,
     postRegister,
-    getHome
+    getHome,
+    logout
 }
