@@ -6,8 +6,10 @@ const session = require("express-session")
 const passport = require("passport")
 
 const userRoutes =require("./routes/user")
+const googleRoute = require("./routes/oauth")
 const connect = require("./utils/service")
-require("./config/passport")(passport)
+require("./config/localPassport")(passport)
+require("./config/googlePassport")(passport)
 
 const app = express()
 
@@ -24,7 +26,7 @@ app.use(express.urlencoded({ extended: true }))
 
 //session
 app.use(session({
-    secret: 'keyboardcat',
+    secret: process.env.SESSION_KEY,
     resave: true,
     saveUninitialized: true
   }))
@@ -45,6 +47,7 @@ app.use(function(req,res,next){
 
 //routes
 app.use("/",userRoutes)
+app.use("/Oauth",googleRoute)
 
 app.listen(process.env.PORT||9090,()=>{
     connect()
