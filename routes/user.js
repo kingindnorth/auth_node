@@ -1,6 +1,6 @@
 const router = require("express").Router()
 
-const ensureAuthenticated = require("../config/auth")
+const {ensureAuthenticated,ensureLogin} = require("../config/auth")
 
 const {
     getLogin,
@@ -11,11 +11,11 @@ const {
     getHome,
 } = require("../controllers/user")
 
-router.get("/",getHome)
-router.get("/login",getLogin)
-router.get("/register",getRegister)
-router.post("/login",postLogin)
-router.post("/register",postRegister)
+router.get("/",ensureLogin,getHome)
+router.get("/login",ensureLogin,getLogin)
+router.get("/register",ensureLogin,getRegister)
+router.post("/login",ensureLogin,postLogin)
+router.post("/register",ensureLogin,postRegister)
 router.get("/dashboard",ensureAuthenticated,getDashboard)
 
 module.exports = router
