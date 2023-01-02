@@ -9,7 +9,6 @@ const {
     postRegister,
     getDashboard,
     getHome,
-    logout
 } = require("../controllers/user")
 
 router.get("/",getHome)
@@ -18,6 +17,5 @@ router.get("/register",getRegister)
 router.post("/login",postLogin)
 router.post("/register",postRegister)
 router.get("/dashboard",ensureAuthenticated,getDashboard)
-router.get("/logout",logout)
 
 module.exports = router

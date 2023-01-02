@@ -76,12 +76,6 @@ const getDashboard = async(req,res)=>{
     res.render("dashboard")
 }
 
-const logout = (req,res)=>{
-    // req.logout()
-    req.flash('success_msg', 'You are logged out');
-    res.redirect('/login');
-}
-
 module.exports = {
     getLogin,
     getRegister,
@@ -89,5 +83,4 @@ module.exports = {
     postLogin,
     postRegister,
     getHome,
-    logout
 }
